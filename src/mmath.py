@@ -110,6 +110,8 @@ class Matrix:
         Matrix
             Новый экземпляр матрицы
         '''
+        if not isinstance(other, (Matrix, int, float)):
+            raise ValueError('сложение поддерживает только Matrix, int и float типы')
         result = deepcopy(self.values)
         if isinstance(other, Matrix):
             if self.size != other.size:
@@ -137,6 +139,8 @@ class Matrix:
         ----------
         self
         '''
+        if not isinstance(other, (Matrix, int, float)):
+            raise ValueError('сложение поддерживает только Matrix, int и float типы')
         if isinstance(other, Matrix):
             if self.size != other.size:
                 raise ValueError('размеры матриц не совпадают')
@@ -149,6 +153,61 @@ class Matrix:
                     self.values[i][j] += other
         return self
     
+    def __sub__(self, other: Union[Matrix, int, float]) -> Matrix:
+        '''
+        Вычитание из матрицы числа или другой матрицы 
+        ----------
+        
+        Параметры
+        other: Matrix | int | float
+            Элемент который вычитается из исходной матрицы
+            
+        Возвращает
+        ----------
+        Matrix
+            Новый экземпляр матрицы
+        '''
+        if not isinstance(other, (Matrix, int, float)):
+            raise ValueError('вычитание поддерживает только Matrix, int и float типы')
+        result = deepcopy(self.values)
+        if isinstance(other, Matrix):
+            if self.size != other.size:
+                raise ValueError('размеры матриц не совпадают')
+            for i in range(self.size[0]):
+                for j in range(self.size[1]):
+                    result[i][j] -= other.values[i][j]
+        elif isinstance(other, (int, float)):
+            for i in range(self.size[0]):
+                for j in range(self.size[1]):
+                    result[i][j] -= other
+        return Matrix(result)
+    
+    def __isub__(self, other: Union[Matrix, int, float]) -> Self:
+        '''
+        Вычитание из матрицы числа или другой матрицы на месте
+        ----------
+        
+        Параметры
+        other: Matrix | int | float
+            Элемент который вычитается из исходной матрицы
+            
+        Возвращает
+        ----------
+        self
+        '''
+        if not isinstance(other, (Matrix, int, float)):
+            raise ValueError('вычитание поддерживает только Matrix, int и float типы')
+        if isinstance(other, Matrix):
+            if self.size != other.size:
+                raise ValueError('размеры матриц не совпадают')
+            for i in range(self.size[0]):
+                for j in range(self.size[1]):
+                    self.values[i][j] -= other.values[i][j]
+        elif isinstance(other, (int, float)):
+            for i in range(self.size[0]):
+                for j in range(self.size[1]):
+                    self.values[i][j] -= other
+        return self
     
     def __mul__(self, other: Union[int, float]) -> Matrix:
         '''
