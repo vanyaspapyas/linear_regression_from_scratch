@@ -3,21 +3,25 @@ from typing import Optional, List, Union, Tuple, Any, Self
 from copy import deepcopy
 
 class Matrix:
-    '''Класс реализующий матрицы
-    
-    Attributes:
-        values (list): Все значения
-        size (tuple): Размер матрицы
-    
     '''
-    def __init__(self, values: List[List[Union[int, float]]], size: Optional[tuple] = None) -> None:
-        '''
-        Инициализация матрицы
+    Матрица для хранения числовых данных в виде матриц
+    ----------
+    
+    Параметры
+    ----------
+    values: list[list[int | float]]
+        Стартовые значения матрицы данных
+    size: tuple(int, int)
+        Размер матрицы
         
-        Args:
-            values (list): Начальные значения матрицы
-            size (tuple): Размеры матрицы
-        '''
+    Атрибуты
+    ----------
+    values: list[list[int | float]]
+        Значения матрицы данных
+    size: tuple(int, int)
+        Текущий размер матрицы
+    '''
+    def __init__(self, values: List[List[Union[int, float]]], size: Optional[Tuple[int, int]] = None) -> None:
         if not values:
             raise ValueError('values должно быть матрицей')
         
@@ -51,15 +55,33 @@ class Matrix:
                 self.values.append(row)
     
     
-    def __getitem__(self, idx: int):
+    def __getitem__(self, idx: Union[int, Tuple[int, int]]):
         '''
         Доступ к элементу матрицы по индексу
+        ----------
+        
+        Параметры
+        ----------
+        idx: int
+            Индекс элементы   
         '''
-        return self.values[idx]
+        if isinstance(idx, int):
+            return self.values[idx]
+        elif isinstance(idx, tuple):
+            row, col = idx
+            return self.values[row][col]
     
     def __setitem__(self, idx: Union[int, Tuple[int, int]], value: Union[int, float, List[Union[int, float]]]):
         '''
         Изменений значения матрицы по индексу
+        ----------
+        
+        Параметры
+        ----------
+        idx: int | tuple(int, int)
+            Индекс элемента
+        value: int | float | list[int | float]
+            Новые значения элементов матрицы
         '''
         if isinstance(idx, tuple):
             if not isinstance(value, (int, float)):
@@ -75,13 +97,18 @@ class Matrix:
     
     def __add__(self, other: Union[Matrix, int, float]) -> Matrix:
         '''
-        Сложение двух матриц 
+        Сложение матрицы с числом или другой матрицей
+        ----------
         
-        Args:
-            other (matrix): матрица для сложения с исходной матрицей
-            
-        Returns:
-            Matrix: возвращает результат в виде нового экземпляра матрицы
+        Параметры
+        ----------
+        other: Matrix | int | float
+            Элемент с которым складывается исходная матрица
+        
+        Возвращает
+        ----------
+        Matrix
+            Новый экземпляр матрицы
         '''
         result = deepcopy(self.values)
         if isinstance(other, Matrix):
@@ -96,12 +123,19 @@ class Matrix:
                     result[i][j] += other
         return Matrix(result)
     
-    def __iadd__(self, other: Union[Matrix, int, float]) -> 'Matrix':
+    def __iadd__(self, other: Union[Matrix, int, float]) -> Self:
         '''
-        Сложение двух матриц на месте
+        Сложение матрицы с числом или другой матрицей на месте
+        ----------
         
-        Args:
-            other (matrix): матрица для сложения с исходной матрицей
+        Параметры
+        ----------
+        other: Matrix | int | float
+            Элемент с которым складывается исходная матрицы
+            
+        Возвращает
+        ----------
+        self
         '''
         if isinstance(other, Matrix):
             if self.size != other.size:
@@ -118,13 +152,16 @@ class Matrix:
     
     def __mul__(self, other: Union[int, float]) -> Matrix:
         '''
-        Умножение матрицы на скаляр
+        Умножение матрицы на число
+        ----------
         
-        Args:
-            other (int | float): скаляр для умножения
+        Параметры
+        other: int | float
+            Число на который умножается исходная матрицы
             
-        Returns: 
-            Matrix: возвращает результат в виде нового экземпляра матрицы
+        Возвращает:
+        Matrix
+            Новый эземлпяр матрицы
         '''
         result = deepcopy(self.values)
         if not isinstance(other, (int, float)):
@@ -137,10 +174,17 @@ class Matrix:
     
     def __imul__(self, other: Union[int, float]) -> Self:
         '''
-        Умножение матрицы на скаляр на месте
+        Умножение матрицы на число на месте
+        ----------
         
-        Args:
-            other (int | float): скаляр для умножения 
+        Параметры
+        ----------
+        other: int | float
+            Число на который умножается исходная матрицы
+        
+        Возвращает
+        ----------
+        self
         '''
         if not isinstance(other, (int, float)):
             raise ValueError('только int и float типы')
@@ -151,18 +195,39 @@ class Matrix:
     
     
     def __repr__(self):
+        '''
+        Наглядное отображение содержимого матрицы
+        ----------
+        
+        Пример
+        ----------
+        [1, 2, 3, 4]\n
+        [5, 6, 7, 8]\n
+        [9, 10, 11, 12]\n
+        [13, 14, 15, 16]\n
+        '''
         return '\n'.join([str(x) for x in self.values])
     
     
     def __str__(self):
+        '''
+        Наглядное отображение содержимого матрицы
+        Возвращает __repr__()
+        '''
         return self.__repr__()
     
     
     def reshape(self, rows: int, cols: int) -> None:
-        '''Изменение размера матрицы на месте, пустые элементы заменяются нулём
+        '''
+        Изменение размера матрицы на месте, пустые элементы, если они имеются, заменяются нулями
+        ----------
         
-        Args:
-            size (tuple): итоговый размер матрицы
+        Параметры
+        ----------
+        rows: int
+            Итоговой количество строк в матрице
+        cols: int
+            Итоговой количество столбцов в матрицу
         '''
         flat_matrx = [elem for row in self.values for elem in row]
         
@@ -182,15 +247,19 @@ class Matrix:
         
     def matmul(self, other: Matrix) -> Matrix:
         '''
-        Умножение двух матрицы
+        Перемножение двух матриц между собой (self @ other)
+        ----------
         
-        Args:
-            other (Matrix): матрица 'B' для перемножения типа AxB
-        
-        Returns:
-            Matrix: возвращает результат в виде нового экземляра матрицы
+        Параметры
+        ----------
+        other: Matrix
+            Матрица на которую умножается исходная матрица
+            
+        Возвращает
+        ----------
+        Matrix
+        Новый экземпляр матрицы с результатом перемножения
         '''
-        
         if not isinstance(other, Matrix):
             raise ValueError('только для матриц')
         if self.size[1] != other.size[0]:
@@ -203,23 +272,25 @@ class Matrix:
 
         return Matrix(result.values)
     
-
-    
-    def T(self) -> Self:
+    def T(self) -> None:
         '''
-        Транспонирование матрицы
+        Транспонирование матрицы на месте
+        ----------
         '''
-        
         self.values = [list(row) for row in zip(*self.values)]
-        
-        return self
     
     def addcol(self, other: Union[List, Tuple]) -> Self:
         '''
-        Добавление заданного столбца(column) в исходную матрицу
+        Добавление заданного столбца в исходную матрицу
         
-        Args:
-            other (List | Tuple): столбец для добавления
+        Параметры
+        ----------
+        other: list | tuple
+            Столбец для добавления в матрицу
+            
+        Возвращает
+        ----------
+        self
         '''
         if not isinstance(other, (list, tuple)):
             raise ValueError('только list ил tuple')
@@ -243,13 +314,16 @@ class Matrix:
     
     def addrow(self, other: Union[List, Tuple]) -> Self:
         '''
-        Добавления новой строки(row) в исходную матрицу
+        Добавления новой строки в исходную матрицу
         
-        Args:
-            other (List | Tuple): строка для добавления
+        Параметры
+        ----------
+        other: list | tuple
+            Строка для добавления в матрицу
             
-        Returns:
-            Self
+        Возвращает
+        ----------
+        self
         '''
         
         if not isinstance(other, (list, tuple)):
@@ -272,11 +346,23 @@ class Matrix:
         return self
                 
     def _update_size(self):
+        '''
+        Метод для обновления информации о текущем размере матрицы
+        ----------
+        '''
         return len(self.values), len(self.values[0])
     
     
 
 class ZeroMatrix(Matrix):
-    def __init__(self, size):
+    '''
+    Матрица необходимого размера полностью заполненная нулями
+    ----------
+    
+    Параметры
+    ----------
+    size: tuple(int, int)
+        Размер нулевой матрицы
+    '''
+    def __init__(self, size: Tuple[int, int]):
         super().__init__([[0]], size)
-        
