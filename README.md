@@ -1,0 +1,27 @@
+## Linear_Regression_From_Scratch
+
+Это учебный проект, целью которого была реализация линейной регрессии без использования стронних библиотек
+
+### Возможности
+- Чтение информации из txt файлов
+- Реализация основных операций с матрицами (умножение, транспонирование, вычитание и другие)
+- Предсказание значений на новых данных
+
+### Структура проекта
+```
+linear_regression_from_scratch
+├──examples
+  ├──basic_usage.py
+  ├──test_data.txt
+  └──train_data.txt
+├──src/
+  └──my_project
+    ├──mdata_reader.py
+    ├──ml.py
+    └──mmath.py
+├──.gitignore
+├──README.md
+└──pyproject.toml
+```
+### Автор
+[Иван Тюрин](https://github.com/vanyaspapyas)
