@@ -5,7 +5,7 @@ from my_project.mmath import Matrix
 
 class DataFrame(Matrix):
     '''
-    Класс реализующий хранение числовых данных с возможностью доступа по столбцам
+    Класс реализующий хранение числовых данных в "таблице"
     ----------
     
     Параметры
@@ -13,8 +13,16 @@ class DataFrame(Matrix):
     data: list[list[int | float]]
         Стартовые значения
     labels: List[str]
-        Метки для каждого из атрибутов
-        
+        Заголовки для каждого из атрибутов
+    
+    Атрибуты
+    ----------
+    values: list[list[int | float]]
+        Значения таблицы
+    size: tuple(int, int)
+        Размер таблицы (кроме заголовков)
+    labels: list[str]
+        Заголовки таблицы
     '''
     
     def __init__(self, data: List[List[int | float]], labels: List[str] = None):
@@ -45,9 +53,18 @@ class DataFrame(Matrix):
     
     def __getitem__(self, idx: int | slice | str | list[str]) -> Matrix:
         '''
-        Извлечение данных из таблицы
-        В случае с извлечением по названию
-
+        Извлечение данных из таблицы по столбцу
+        ----------
+        
+        Параметры
+        ----------
+        idx: int | slice | str | list[str]
+            Индекс для доступа к столбцу
+        
+        Возвращает
+        ----------
+        Matrix
+            Новый экземпляр матрицы с данными из одного или нескольких столбцов
         '''
         if not isinstance(idx, (int, slice, str, list)):
             raise ValueError('Индексы могут быть только числами, срезами или строками в случае с наличием заголовков')
@@ -85,6 +102,17 @@ class DataFrame(Matrix):
             
 
 def read_data(data, sep: str = ' ', header = True) -> DataFrame:
+    '''
+    Чтение данных из txt файла
+    ----------
+    
+    Параметры
+    ----------
+    sep: str
+        Разделитель между данными
+    header: bool
+        Наличие или отсутствие заголовков
+    '''
     with open(data, 'r') as f:
         if header:
             labels = [x for x in f.readline().strip().split(sep)]

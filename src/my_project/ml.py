@@ -54,9 +54,37 @@ class Linear_Regression:
             loss = (errors**2).mean()
             self.losses_.append(loss)
             
-    def activation(self, X):
+    def activation(self, X: mm.Matrix) -> mm.Matrix:
+        '''
+        Вычисление активации от текущего входа
+        ----------
+        
+        Параметры
+        ----------
+        X: mm.Matrix
+            Матрица со входными данными
+            
+        Возвращает
+        ----------
+        mm.Matrix
+            Новый экземпляр мартрицы с выходными значениями
+        '''
         return X.matmul(self.w_) + self.b_
     
-    def predict(self, X):
+    def predict(self, X: mm.Matrix) -> mm.Matrix:
+        '''
+        Вычисление предсказания для обученной модели
+        ----------
+        
+        Параметры
+        ----------
+        X: mm.Matrix
+            Матрица со входными данными
+            
+        Возвращает
+        ----------
+        mm.Matrix
+            Новый экземпляр матрицы с выходными значениями
+        '''
         return self.activation(X) if isinstance(X, mm.Matrix) else self.activation(mm.Matrix([X]))
     
