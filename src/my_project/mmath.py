@@ -4,20 +4,20 @@ from copy import deepcopy
 
 class Matrix:
     '''
-    Матрица для хранения числовых данных в виде матриц
+    Класс для хранения числовых данных в виде матриц
     ----------
     
     Параметры
     ----------
     values: list[list[int | float]]
-        Стартовые значения матрицы данных
+        Стартовые значения матрицы
     size: tuple(int, int)
         Размер матрицы
         
     Атрибуты
     ----------
     values: list[list[int | float]]
-        Значения матрицы данных
+        Значения матрицы
     size: tuple(int, int)
         Текущий размер матрицы
     '''
@@ -216,7 +216,7 @@ class Matrix:
         
         Параметры
         other: int | float
-            Число на который умножается исходная матрицы
+            Множитель для чисел в матрице
             
         Возвращает:
         Matrix
@@ -230,6 +230,9 @@ class Matrix:
                 result[i][j] *= other
         return Matrix(result)
     
+    def __rmul__(self, other: Union[int, float]):
+        return self.__mul__(other)
+    
     
     def __imul__(self, other: Union[int, float]) -> Self:
         '''
@@ -239,7 +242,7 @@ class Matrix:
         Параметры
         ----------
         other: int | float
-            Число на который умножается исходная матрицы
+            Множитель для чисел в матрице
         
         Возвращает
         ----------
@@ -252,7 +255,76 @@ class Matrix:
                 self.values[i][j] *= other
         return self
     
+    def __truediv__(self, other: Union[int | float]) -> Matrix:
+        '''
+        Деление всех значений в матрице на число
+        ----------
+        
+        Параметры
+        ----------
+        other: int | float
+            Делитель для всех чисел в матрице
+            
+        Возвращает
+        ----------
+        Matrix
+            Новый экземлпяр матрицы с результатом деления
+        '''
+        if not isinstance(other, (int, float)):
+            raise ValueError('делитель может быть только int или float')
+        result = deepcopy(self.values)
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                result[i][j] /= other
+        return Matrix(result)
     
+    def __itruediv__(self, other: Union[int | float]) -> Self:
+        '''
+        Деление всех значений в матрице на число на месте
+        ----------
+        
+        Параметры
+        ----------
+        other: int | float
+            Делитель для всех чисел в матрице
+            
+        Возвращает
+        ----------
+        Matrix
+            Новый экземлпяр матрицы с результатом деления
+        '''
+        if not isinstance(other, (int, float)):
+            raise ValueError('делитель может быть только int или float')
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                self.values[i][j] /= other
+        return self
+
+    
+    def __pow__(self, value: Union[int, float]) -> Matrix:
+        '''
+        Возведение всех значений в матрице в степень
+        ----------
+        
+        Параметры
+        ----------
+        value: int | float
+            Показатель возведения в степень
+            
+        Возвращает
+        ----------
+        Matrix
+            Новый экземпляр матрицы с результатом возведения в степень
+        '''
+        if not isinstance(value, (int, float)):
+            raise ValueError('показатель возведения в степень может быть только int или float')
+        result = deepcopy(self.values)
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                result[i][j] **= value
+        return Matrix(result)
+        
+        
     def __repr__(self):
         '''
         Наглядное отображение содержимого матрицы
@@ -317,7 +389,7 @@ class Matrix:
         Возвращает
         ----------
         Matrix
-        Новый экземпляр матрицы с результатом перемножения
+            Новый экземпляр матрицы с результатом перемножения
         '''
         if not isinstance(other, Matrix):
             raise ValueError('только для матриц')
@@ -331,12 +403,19 @@ class Matrix:
 
         return Matrix(result.values)
     
-    def T(self) -> None:
+    def T(self) -> Matrix:
         '''
-        Транспонирование матрицы на месте
+        Транспонирование матрицы
         ----------
+        
+        Возвращает
+        ----------
+        Matrix
+            Новый экземпляр матрицы с результатом транспонирования
         '''
-        self.values = [list(row) for row in zip(*self.values)]
+        result = deepcopy(self.values)
+        result = [list(row) for row in zip(*result)]
+        return Matrix(result)
     
     def addcol(self, other: Union[List, Tuple]) -> Self:
         '''
@@ -366,7 +445,7 @@ class Matrix:
                 else:
                     result.values[i][j] = self.values[i][j]
         self.values = deepcopy(result.values)
-        self.size = self._update_size()
+        self._update_size()
         
         return self
     
@@ -400,16 +479,27 @@ class Matrix:
                 else:
                     result.values[i][j] = self.values[i][j]
         self.values = deepcopy(result.values)
-        self.size = self._update_size()
-        
+        self._update_size()
         return self
+    
+    def mean(self) -> Union[int, float]:
+        '''
+        Вычисление среднего значения по матрицу
+        ----------
+        
+        Возвращает
+        ----------
+        int | float
+            Среднее значение по матрице
+        '''
+        return sum(map(sum, self.values)) / (self.size[0] * self.size[1])
                 
     def _update_size(self):
         '''
         Метод для обновления информации о текущем размере матрицы
         ----------
         '''
-        return len(self.values), len(self.values[0])
+        self.size = (len(self.values), len(self.values[0]))
     
     
 

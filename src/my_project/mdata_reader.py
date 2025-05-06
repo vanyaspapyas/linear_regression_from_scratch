@@ -1,11 +1,23 @@
 from __future__ import annotations
 from typing import Optional, List, Union, Tuple, Any, Self
-from mmath import Matrix
+from my_project.mmath import Matrix
 
 
 class DataFrame(Matrix):
+    '''
+    Класс реализующий хранение числовых данных с возможностью доступа по столбцам
+    ----------
     
-    def __init__(self, data, labels=None):
+    Параметры
+    ----------
+    data: list[list[int | float]]
+        Стартовые значения
+    labels: List[str]
+        Метки для каждого из атрибутов
+        
+    '''
+    
+    def __init__(self, data: List[List[int | float]], labels: List[str] = None):
         self.labels = labels if labels else False
         super().__init__(data)
             
@@ -60,13 +72,13 @@ class DataFrame(Matrix):
                         current_res = []
                         for i in range(len(self.values)):
                             current_res.append([self.values[i][current_idx]])
-                        result = Matrix(current_res)
+                        res = Matrix(current_res)
                     else:
                         current_res = []
                         for i in range(len(self.values)):
                             current_res.append(self.values[i][current_idx])
-                        result.addcol(current_res)
-                return result
+                        res.addcol(current_res)
+                return res
                 
         
         return Matrix(res)
@@ -78,7 +90,9 @@ def read_data(data, sep: str = ' ', header = True) -> DataFrame:
             labels = [x for x in f.readline().strip().split(sep)]
         res = []
         for line in f:
-            res.append([int(x) for x in line.strip().split(sep)])
+            try:
+                res.append([float(x) for x in line.strip().split(sep)])
+            except:
+                continue
         return DataFrame(res, labels) if header else DataFrame(res)
     
-

@@ -1,0 +1,7 @@
+[project]
+name = "my_project"
+version = "0.0.1"
+
+[tool.setuptools]
+package-dir = {""="src"}
+packages = ["my_project"]
