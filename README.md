@@ -16,9 +16,9 @@ linear_regression_from_scratch
   └──train_data.txt
 ├──src/
   └──my_project
-    ├──mdata_reader.py
-    ├──ml.py
-    └──mmath.py
+    ├──mdata_reader.py  - чтенит данных из txt файлов
+    ├──ml.py  - реализация минимального варианта линейной регресии
+    └──mmath.py  - реализация основных операций с матрицами
 ├──.gitignore
 ├──README.md
 └──pyproject.toml
